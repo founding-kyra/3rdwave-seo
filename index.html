@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SEO Audit — 3rd Wave Coffee Roasters</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #FAF6F0;
+      --espresso: #2C1810;
+      --roast: #6B3A2A;
+      --caramel: #C07A3A;
+      --gold: #E8A93C;
+      --sage: #4A6741;
+      --sage-light: #EBF2EA;
+      --red: #C0392B;
+      --red-light: #FDECEA;
+      --orange: #D35400;
+      --orange-light: #FEF0E7;
+      --yellow: #B7860B;
+      --yellow-light: #FEF9E7;
+      --blue: #1A5276;
+      --blue-light: #EBF5FB;
+      --gray-50: #F9FAFB;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-700: #374151;
+      --gray-900: #111827;
+      --white: #FFFFFF;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 16px rgba(44,24,16,0.10);
+      --radius: 14px;
+      --radius-sm: 8px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--espresso);
+      min-height: 100vh;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: var(--espresso);
+      color: var(--white);
+      padding: 56px 24px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 40%, rgba(192,122,58,0.25) 0%, transparent 65%),
+                  radial-gradient(ellipse at 20% 80%, rgba(107,58,42,0.4) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: .15em; text-transform: uppercase;
+      background: rgba(232,169,60,.18);
+      border: 1px solid rgba(232,169,60,.4);
+      color: var(--gold);
+      padding: 4px 14px; border-radius: 99px;
+      margin-bottom: 18px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 46px);
+      font-weight: 900; line-height: 1.1;
+      letter-spacing: -.02em;
+      margin-bottom: 10px;
+    }
+    .hero h1 span { color: var(--gold); }
+    .hero-sub {
+      font-size: 14px; color: rgba(255,255,255,.55);
+      letter-spacing: .03em;
+    }
+    .hero-wave {
+      position: absolute; bottom: -1px; left: 0; right: 0;
+      height: 32px; overflow: hidden;
+    }
+    .hero-wave svg { display: block; width: 100%; height: 32px; }
+
+    /* ── Sticky progress bar ── */
+    .sticky-bar {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 12px 24px;
+      display: flex; align-items: center; gap: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+    .sticky-label { font-size: 13px; font-weight: 600; color: var(--espresso); white-space: nowrap; }
+    .progress-track {
+      flex: 1; height: 8px; background: var(--gray-100);
+      border-radius: 99px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; background: linear-gradient(90deg, var(--sage) 0%, var(--gold) 100%);
+      border-radius: 99px;
+      transition: width .5s cubic-bezier(.4,0,.2,1);
+    }
+    .sticky-count { font-size: 13px; font-weight: 700; color: var(--gray-700); white-space: nowrap; }
+
+    /* ── Main layout ── */
+    .container { max-width: 740px; margin: 0 auto; padding: 40px 20px 80px; }
+
+    /* ── Section headings ── */
+    .section-heading {
+      font-size: 11px; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--caramel);
+      margin-bottom: 14px; margin-top: 48px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-heading::after {
+      content: ''; flex: 1; height: 1px; background: var(--gray-200);
+    }
+
+    /* ── Stats grid ── */
+    .stats-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+    .stat-row {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--white); border-radius: var(--radius-sm);
+      padding: 13px 16px; border: 1px solid var(--gray-100);
+      gap: 12px; transition: box-shadow .15s;
+    }
+    .stat-row:hover { box-shadow: var(--shadow-sm); }
+    .stat-left { display: flex; align-items: flex-start; gap: 12px; }
+    .stat-dot {
+      width: 9px; height: 9px; border-radius: 50%;
+      flex-shrink: 0; margin-top: 5px;
+    }
+    .stat-dot.critical { background: var(--red); box-shadow: 0 0 0 3px rgba(192,57,43,.15); }
+    .stat-dot.warning  { background: var(--yellow); box-shadow: 0 0 0 3px rgba(183,134,11,.15); }
+    .stat-dot.good     { background: var(--sage); box-shadow: 0 0 0 3px rgba(74,103,65,.15); }
+    .stat-name { font-size: 13px; font-weight: 600; color: var(--espresso); line-height: 1.3; }
+    .stat-note { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+    .stat-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .stat-value { font-size: 13px; font-weight: 700; }
+    .stat-value.critical { color: var(--red); }
+    .stat-value.warning  { color: var(--yellow); }
+    .stat-value.good     { color: var(--sage); }
+    .badge {
+      font-size: 10px; font-weight: 700; letter-spacing: .05em;
+      padding: 2px 8px; border-radius: 99px;
+    }
+    .badge.critical { background: var(--red-light); color: var(--red); }
+    .badge.warning  { background: var(--yellow-light); color: var(--yellow); }
+    .badge.good     { background: var(--sage-light); color: var(--sage); }
+
+    /* ── Phase cards ── */
+    .phase { margin-bottom: 16px; border-radius: var(--radius); overflow: hidden; border: 1.5px solid; }
+    .phase.red    { border-color: #E8C0BB; }
+    .phase.orange { border-color: #F0CDB5; }
+    .phase.yellow { border-color: #EDD99A; }
+    .phase.green  { border-color: #B8D4B5; }
+    .phase.blue   { border-color: #AACBE0; }
+
+    .phase-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px; cursor: pointer; user-select: none;
+      transition: background .15s;
+    }
+    .phase.red    .phase-header { background: #FDF0EE; }
+    .phase.orange .phase-header { background: #FEF4EE; }
+    .phase.yellow .phase-header { background: #FEFAE7; }
+    .phase.green  .phase-header { background: var(--sage-light); }
+    .phase.blue   .phase-header { background: #EBF5FB; }
+    .phase-header:hover { filter: brightness(.97); }
+
+    .phase-header-left { display: flex; flex-direction: column; gap: 4px; }
+    .phase-tag {
+      display: inline-block; font-size: 10px; font-weight: 800;
+      letter-spacing: .1em; text-transform: uppercase;
+      padding: 2px 10px; border-radius: 99px;
+    }
+    .phase.red    .phase-tag { background: #FADBD8; color: var(--red); }
+    .phase.orange .phase-tag { background: #FAD7A0; color: var(--orange); }
+    .phase.yellow .phase-tag { background: #FDEBD0; color: var(--yellow); }
+    .phase.green  .phase-tag { background: #D5E8D4; color: var(--sage); }
+    .phase.blue   .phase-tag { background: #D6EAF8; color: var(--blue); }
+    .phase-subtitle { font-size: 13px; font-weight: 600; color: var(--gray-700); }
+
+    .phase-header-right { display: flex; align-items: center; gap: 8px; }
+    .phase-count { font-size: 12px; font-weight: 600; color: var(--gray-500); }
+    .phase-toggle {
+      font-size: 11px; color: var(--gray-400);
+      transition: transform .25s;
+      width: 20px; height: 20px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .phase-toggle.open { transform: rotate(180deg); }
+
+    /* Phase mini progress */
+    .phase-mini-progress { height: 3px; background: var(--gray-100); }
+    .phase-mini-fill { height: 100%; transition: width .4s ease; }
+    .phase.red    .phase-mini-fill { background: var(--red); }
+    .phase.orange .phase-mini-fill { background: var(--orange); }
+    .phase.yellow .phase-mini-fill { background: var(--yellow); }
+    .phase.green  .phase-mini-fill { background: var(--sage); }
+    .phase.blue   .phase-mini-fill { background: var(--blue); }
+
+    /* Items */
+    .phase-items { background: var(--white); }
+    .phase-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 13px 18px; border-top: 1px solid var(--gray-100);
+    }
+    .phase-item:first-child { border-top: none; }
+
+    .custom-cb {
+      width: 18px; height: 18px; border-radius: 5px;
+      border: 2px solid var(--gray-200); background: var(--white);
+      flex-shrink: 0; margin-top: 1px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .15s; position: relative;
+    }
+    .custom-cb:hover { border-color: var(--caramel); }
+    .custom-cb.checked {
+      border-color: var(--sage); background: var(--sage);
+    }
+    .custom-cb.checked::after {
+      content: '';
+      width: 10px; height: 6px;
+      border-left: 2px solid white;
+      border-bottom: 2px solid white;
+      transform: rotate(-45deg) translateY(-1px);
+      display: block;
+    }
+
+    .item-body { flex: 1; min-width: 0; }
+    .item-text {
+      font-size: 13px; font-weight: 500; color: var(--espresso);
+      cursor: pointer; transition: color .15s; line-height: 1.45;
+    }
+    .item-text:hover { color: var(--caramel); }
+    .item-text.done { text-decoration: line-through; color: var(--gray-400); }
+
+    .detail-toggle {
+      font-size: 11px; color: var(--caramel); cursor: pointer;
+      display: inline-flex; align-items: center; gap: 3px;
+      margin-top: 3px; background: none; border: none;
+      font-family: inherit; padding: 0; font-weight: 600;
+      transition: color .15s;
+    }
+    .detail-toggle:hover { color: var(--roast); }
+    .detail-arrow { transition: transform .2s; display: inline-block; }
+    .detail-arrow.open { transform: rotate(180deg); }
+
+    .item-detail {
+      font-size: 11.5px; color: var(--gray-500); line-height: 1.6;
+      background: var(--gray-50); border-radius: 6px;
+      padding: 8px 10px; margin-top: 6px;
+      border-left: 2px solid var(--gray-200);
+      overflow: hidden;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center; padding: 32px 20px;
+      font-size: 11px; color: var(--gray-400); letter-spacing: .05em;
+    }
+    .footer strong { color: var(--caramel); }
+
+    /* ── Animations ── */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .phase-items { animation: fadeIn .2s ease; }
+
+    /* ── Responsive ── */
+    @media (max-width: 520px) {
+      .hero { padding: 40px 16px 36px; }
+      .container { padding: 28px 14px 60px; }
+      .stat-note { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-eyebrow">SEO Audit · February 2026</div>
+  <h1>3rd Wave <span>Coffee</span> Roasters</h1>
+  <p class="hero-sub">3rdwavecoffee.com &nbsp;·&nbsp; Road to 2× Revenue</p>
+  <div class="hero-wave">
+    <svg viewBox="0 0 1440 32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,16 C360,32 1080,0 1440,16 L1440,32 L0,32 Z" fill="#FAF6F0"/>
+    </svg>
+  </div>
+</header>
+
+<!-- Sticky progress bar -->
+<div class="sticky-bar">
+  <span class="sticky-label">Overall Progress</span>
+  <div class="progress-track"><div class="progress-fill" id="globalFill" style="width:0%"></div></div>
+  <span class="sticky-count" id="globalCount">0 / 35 done</span>
+</div>
+
+<!-- Main content -->
+<div class="container">
+
+  <!-- Snapshot -->
+  <div class="section-heading">Current State Snapshot</div>
+  <div class="stats-grid" id="statsGrid"></div>
+
+  <!-- Checklist -->
+  <div class="section-heading" style="margin-top:48px">Action Plan Checklist</div>
+  <div id="phases"></div>
+
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <strong>3rd Wave Coffee Roasters</strong> · SEO Audit · February 2026<br/>
+  Built with ☕ — your progress saves automatically in this session
+</footer>
+
+<script>
+const metrics = [
+  { label:"Pages Indexed by Google",  value:"~10",              status:"critical", note:"Should be 50–100+" },
+  { label:"Homepage Title Tag",        value:"3rdwavecoffee.com",status:"critical", note:"Just the domain — no keywords" },
+  { label:"Meta Description",          value:"Empty",           status:"critical", note:"0 of 320 characters written" },
+  { label:"Blog Posts",                value:"0",               status:"critical", note:"Last blog update: Jun 2022" },
+  { label:"Collections",               value:"4",               status:"warning",  note:"Should be 8–10 targeted pages" },
+  { label:"Products in Draft",         value:"~14",             status:"warning",  note:"Hidden from Google & customers" },
+  { label:"Google Analytics",          value:"Not connected",   status:"critical", note:"Flying blind" },
+  { label:"Search Console",            value:"Not connected",   status:"critical", note:"No keyword or click data" },
+  { label:"Conversion Rate",           value:"3.18%",           status:"good",     note:"Strong — traffic is the problem, not UX" },
+  { label:"Average Order Value",       value:"$44",             status:"good",     note:"Solid for DTC coffee" },
+  { label:"Core Web Vitals (LCP)",     value:"1,164ms",         status:"good",     note:"Good — site is fast" },
+  { label:"Core Web Vitals (INP)",     value:"56ms",            status:"good",     note:"Excellent" },
+];
+
+const phases = [
+  {
+    id:"p1", color:"red", label:"This Week", subtitle:"Foundation — highest ROI, ~2 hours",
+    items:[
+      { id:"w1_1", text:"Fix homepage title tag", detail:'Example: "Organic Fair Trade Coffee | 3rd Wave Coffee Roasters – St. Augustine, FL"' },
+      { id:"w1_2", text:"Write homepage meta description", detail:"155–160 chars. Include: organic, fair trade, micro-batch, St. Augustine, FL" },
+      { id:"w1_3", text:"Connect Google Analytics 4", detail:"Shopify Admin → Settings → Customer Events → Add pixel → GA4" },
+      { id:"w1_4", text:"Set up Google Search Console", detail:"Verify domain ownership, submit sitemap.xml" },
+      { id:"w1_5", text:"Fix negative inventory products", detail:"Velvet Wave (−156), Midnight Blend (−137), Peru La Florida (−131), Maya Royal Decaf (−103), Uncle Monkey (−145)" },
+      { id:"w1_6", text:"Fix 'Chocolate Covered Fruit' product category", detail:'"16oz Ellie\'s Sweet Squeeze" — wrong category, review if it belongs in the store' },
+      { id:"w1_7", text:"Fix 'Uncategorized' product", detail:'"16oz/1lb bag of coffee" — assign correct category and add keyword-rich name' },
+    ]
+  },
+  {
+    id:"p2", color:"orange", label:"Week 2", subtitle:"Unlock the hidden catalog",
+    items:[
+      { id:"w2_1", text:"Audit all 14 draft products — publish ready ones", detail:"Organic Uganda Bugisu, Sumatra Mandheling, Bolivia, Colombia Sierra Nevada, Costa Rica, Ethiopia Sidamo, Peru COOPAFSI, Café de Brazil, Flores Bajawa" },
+      { id:"w2_2", text:"Rename generic products with keyword-rich titles", detail:'"16oz Drip Coffee" → "16oz Organic Single-Origin Drip Coffee | 3rd Wave Coffee Roasters"' },
+      { id:"w2_3", text:"Add channels to products currently at 0 channels", detail:"All active and newly published products should be on Online Store + Google channel at minimum" },
+      { id:"w2_4", text:"Verify jayellscoffee.com 301 redirect is working", detail:"Check in Google Search Console that link equity from old domain is passing through" },
+      { id:"w2_5", text:"Update theme to version 15.4.1", detail:"Current theme '3rd Wave 2025' has an update available — keep a backup before updating" },
+    ]
+  },
+  {
+    id:"p3", color:"yellow", label:"Week 2–3", subtitle:"Build your collection architecture",
+    items:[
+      { id:"w3_1", text:"Create collection: Organic Single Origin Coffee", detail:"URL: /collections/organic-single-origin-coffee — write 100–150 word keyword-rich description" },
+      { id:"w3_2", text:"Create collection: Espresso Blends", detail:"URL: /collections/espresso-blends — Velvet Wave, Uncle Monkey, Midnight Blend" },
+      { id:"w3_3", text:"Create collection: Decaf Coffee", detail:"URL: /collections/decaf-coffee — Maya Royal Select Decaf and any others" },
+      { id:"w3_4", text:"Create collection: Cold Brew & Ready-to-Drink", detail:"URL: /collections/cold-brew — 16oz Cold Brew, 24oz Cold Brew, 24oz Iced Cold Brew Latte" },
+      { id:"w3_5", text:"Create collection: Whole Bean Coffee", detail:"URL: /collections/whole-bean-coffee — all whole bean single origins" },
+      { id:"w3_6", text:"Create collection: By Region (African, Central American, South American, Indonesian)", detail:"Each region = one collection. Extremely high-value for SEO and discovery" },
+      { id:"w3_7", text:"Write SEO title + description for each collection page", detail:"Every collection page needs a unique title tag and meta description — don't leave them as defaults" },
+      { id:"w3_8", text:"Rename /pages/wholesale-1 URL slug", detail:'Change to /pages/wholesale — the "-1" suffix suggests a duplicate was created' },
+    ]
+  },
+  {
+    id:"p4", color:"green", label:"Month 2", subtitle:"Content marketing — this is where 2× lives",
+    items:[
+      { id:"m2_1", text:"Rename blog to something brandable", detail:'e.g. "The Wave" or "Roaster\'s Journal" — not just "News"' },
+      { id:"m2_2", text:"Publish blog post: 'What Is Third Wave Coffee?'", detail:"Target keyword: 'third wave coffee' — 2,400 searches/mo. Link to your story and products" },
+      { id:"m2_3", text:"Publish blog post: 'Best Organic Fair Trade Coffee Beans'", detail:"Target keyword: 'best organic fair trade coffee' — high commercial intent, link to your products" },
+      { id:"m2_4", text:"Publish blog post: 'How to Brew the Perfect Pour Over'", detail:"Target keyword: 'pour over coffee guide' — informational, builds trust, drives product discovery" },
+      { id:"m2_5", text:"Publish blog post: 'Organic Coffee Roasters in St. Augustine, FL'", detail:"Target keyword: 'coffee St. Augustine' — captures local search + tourism traffic" },
+      { id:"m2_6", text:"Create an About / Our Story page", detail:"Micro-batch roasting, St. Augustine roots, sourcing relationships — this builds trust AND SEO" },
+      { id:"m2_7", text:"Create a Brewing Guides page", detail:"URL: /pages/brewing-guides — target 'how to brew coffee' and related terms" },
+      { id:"m2_8", text:"Create a FAQ page", detail:"Common questions: shipping, freshness, grind sizes, subscriptions — also great for featured snippets" },
+      { id:"m2_9", text:"Verify Judge.me review stars show in Google results", detail:"Judge.me is installed — confirm review rich snippets are appearing in Google search results" },
+    ]
+  },
+  {
+    id:"p5", color:"blue", label:"Month 2–3", subtitle:"Revenue scaling",
+    items:[
+      { id:"m3_1", text:"Launch a coffee subscription program", detail:"Use ReCharge, Skio, or Bold Subscriptions — subscriptions can be 30–40% of DTC coffee revenue" },
+      { id:"m3_2", text:"Optimize Google Business Profile for St. Augustine", detail:"Claim/update your profile, add photos, get reviews, add products — captures local + tourist searches" },
+      { id:"m3_3", text:"Install an SEO app", detail:"Plug in SEO or Smart SEO — automates title/meta checks, broken link detection, image alt text" },
+      { id:"m3_4", text:"Set up email capture + welcome flow", detail:"Pop-up on exit intent with a discount — then an automated sequence linking to your best products" },
+      { id:"m3_5", text:"Build backlinks through local press and coffee communities", detail:"St. Augustine news outlets, coffee blogger outreach, wholesale partner co-promotion" },
+      { id:"m3_6", text:"Add alt text to all product images", detail:"Every product photo needs descriptive alt text: 'Organic Ethiopia Guji Single Origin Coffee Beans 12oz bag'" },
+    ]
+  },
+];
+
+// --- State ---
+const checked  = {};
+const expanded = {};
+const open     = { p1:true, p2:false, p3:false, p4:false, p5:false };
+
+// --- Render stats ---
+const statsGrid = document.getElementById('statsGrid');
+metrics.forEach(m => {
+  statsGrid.innerHTML += `
+    <div class="stat-row">
+      <div class="stat-left">
+        <div class="stat-dot ${m.status}"></div>
+        <div>
+          <div class="stat-name">${m.label}</div>
+          <div class="stat-note">${m.note}</div>
+        </div>
+      </div>
+      <div class="stat-right">
+        <span class="stat-value ${m.status}">${m.value}</span>
+        <span class="badge ${m.status}">${m.status==='critical'?'Critical':m.status==='warning'?'Needs Work':'Good'}</span>
+      </div>
+    </div>`;
+});
+
+// --- Render phases ---
+const phasesEl = document.getElementById('phases');
+phases.forEach(phase => {
+  phasesEl.innerHTML += `
+    <div class="phase ${phase.color}" id="phase_${phase.id}">
+      <div class="phase-header" onclick="togglePhase('${phase.id}')">
+        <div class="phase-header-left">
+          <span class="phase-tag">${phase.label}</span>
+          <span class="phase-subtitle">${phase.subtitle}</span>
+        </div>
+        <div class="phase-header-right">
+          <span class="phase-count" id="count_${phase.id}">0/${phase.items.length}</span>
+          <span class="phase-toggle ${open[phase.id]?'open':''}" id="arrow_${phase.id}">▼</span>
+        </div>
+      </div>
+      <div class="phase-mini-progress">
+        <div class="phase-mini-fill" id="miniFill_${phase.id}" style="width:0%"></div>
+      </div>
+      <div class="phase-items" id="items_${phase.id}" style="display:${open[phase.id]?'block':'none'}">
+        ${phase.items.map(item => `
+          <div class="phase-item" id="row_${item.id}">
+            <div class="custom-cb" id="cb_${item.id}" onclick="toggleCheck('${item.id}','${phase.id}')"></div>
+            <div class="item-body">
+              <div class="item-text" id="text_${item.id}" onclick="toggleCheck('${item.id}','${phase.id}')">${item.text}</div>
+              <button class="detail-toggle" onclick="toggleDetail('${item.id}')">
+                <span class="detail-arrow" id="darrow_${item.id}">▼</span> details
+              </button>
+              <div class="item-detail" id="detail_${item.id}" style="display:none">${item.detail}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+});
+
+// --- Toggle functions ---
+function togglePhase(id) {
+  open[id] = !open[id];
+  document.getElementById(`items_${id}`).style.display = open[id] ? 'block' : 'none';
+  const arrow = document.getElementById(`arrow_${id}`);
+  arrow.classList.toggle('open', open[id]);
+}
+
+function toggleDetail(id) {
+  expanded[id] = !expanded[id];
+  document.getElementById(`detail_${id}`).style.display = expanded[id] ? 'block' : 'none';
+  document.getElementById(`darrow_${id}`).classList.toggle('open', expanded[id]);
+}
+
+function toggleCheck(itemId, phaseId) {
+  checked[itemId] = !checked[itemId];
+  const cb = document.getElementById(`cb_${itemId}`);
+  const txt = document.getElementById(`text_${itemId}`);
+  cb.classList.toggle('checked', checked[itemId]);
+  txt.classList.toggle('done', checked[itemId]);
+  updateProgress(phaseId);
+  updateGlobal();
+}
+
+function updateProgress(phaseId) {
+  const phase = phases.find(p => p.id === phaseId);
+  const done  = phase.items.filter(i => checked[i.id]).length;
+  const total = phase.items.length;
+  const pct   = total ? (done/total)*100 : 0;
+  document.getElementById(`count_${phaseId}`).textContent = `${done}/${total}`;
+  document.getElementById(`miniFill_${phaseId}`).style.width = pct + '%';
+}
+
+function updateGlobal() {
+  const allItems = phases.flatMap(p => p.items);
+  const done  = allItems.filter(i => checked[i.id]).length;
+  const total = allItems.length;
+  const pct   = (done/total)*100;
+  document.getElementById('globalFill').style.width = pct + '%';
+  document.getElementById('globalCount').textContent = `${done} / ${total} done`;
+}
+</script>
+</body>
+</html>
